@@ -66,13 +66,36 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
-    return LayoutBuilder(builder: (context, constraints) {
-      return Scaffold(
-        body: Row(
-          children: [
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Namer App'),
+        centerTitle: true,
+      ),
+      bottomNavigationBar: MediaQuery.of(context).size.width < 640
+          ? BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite),
+                  label: 'Favorites',
+                ),
+              ],
+              currentIndex: selectedIndex,
+              onTap: (value) {
+                setState(() {
+                  selectedIndex = value;
+                });
+              },
+            )
+          : null,
+      body: Row(
+        children: [
+          if (MediaQuery.of(context).size.width >= 640)
             SafeArea(
               child: NavigationRail(
-                extended: constraints.maxWidth >= 600,
                 destinations: [
                   NavigationRailDestination(
                     icon: Icon(Icons.home),
@@ -91,16 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: page,
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }
 
